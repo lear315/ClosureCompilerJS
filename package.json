@@ -1,0 +1,23 @@
+{
+  "name": "closure-demo",
+  "version": "1.0.0",
+  "description": "npm i -g google-closure-compiler",
+  "main": "index.js",
+  "bin": {
+    "closure-demo": "bundle.js"
+  },
+  "scripts": {
+    "tsickle": "node .tsickle --externs=externs/libs.js -- -p ./",
+    "gcc": "google-closure-compiler -O ADVANCED --language_in ECMASCRIPT_2017 --language_out ECMASCRIPT_2017 src/bundle.js --js_output_file bin/bundle.js --externs externs/libs.js --externs externs/ignore_externs.js",
+    "prepare": "node .prepare -p src/bundle.js && npm run gcc",
+    "build": "npm run tsickle && npm run gcc",
+    "buildprepare": "npm run tsickle && node .prepare -p src/bundle.js && npm run gcc"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "minimist": "^1.2.6",
+    "tsickle": "^0.46.0",
+    "typescript": "^4.6.3"
+  }
+}

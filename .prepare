@@ -1,0 +1,32 @@
+const fs = require("fs");
+const minimist = require("minimist");
+const path = require("path");
+
+// node prepare.js -p src/bundle1.js
+
+function main(args) {
+    const parsedArgs = minimist(args);
+    var path = parsedArgs.p;
+    var content = fs.readFileSync(path, 'utf-8');
+
+    // 装饰器翻译器
+    content = content.replace(/tslib_1.__decorate\(([\s\S]*?)\)\;/g, function(w) { 
+        console.log(w)
+        var arr = w.split(',');
+        var funcName = arr[2].match(/\"([\s\S]*?)\"/g)
+        if (funcName && funcName[0]) {
+            funcName = funcName[0].slice(1,-1);
+            arr[2] = arr[1] + "." + funcName + ".name"; 
+            var newWord = arr.join(',');
+            return newWord;
+        } else {
+            w;
+        }
+    })
+    fs.writeFileSync(path, content, { encoding: 'utf-8' });
+    return 0;
+}
+// CLI entry point
+if (require.main === module) {
+    process.exit(main(process.argv.splice(2)));
+}
